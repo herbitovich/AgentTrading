@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'trades',
     'rest_framework',
     'analytics',
+    'main',
 ]
 
 MIDDLEWARE = [

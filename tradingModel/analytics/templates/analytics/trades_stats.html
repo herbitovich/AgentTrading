@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html> <!--TODO смена имен функций, константы, без времени по y, дизайн-->
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -113,8 +113,8 @@
           }
         }
     });
-    async function fetch_data() {
-        response = await fetch(`api/get-trades/${company}`);
+    async function fetchData() {
+        response = await fetch(`/api/get-trades/${company}`);
         if (response.ok) {
             trades = await response.json();
 
@@ -147,8 +147,8 @@
             alert("Ошибка HTTP: " + response.status);
         }
     }
-    fetch_data();
-    setInterval(fetch_data, REFRESH_INTERVAL);
+    fetchData();
+    setInterval(fetchData, REFRESH_INTERVAL);
 </script>
 </body>
 </html>

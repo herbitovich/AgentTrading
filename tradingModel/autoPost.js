@@ -4,11 +4,11 @@ setInterval(async () => {
     const actions = ['buy', 'sell', 'hold'];
     const action = actions[Math.floor(Math.random() * actions.length)];
     try {
-        const response = await fetch('http://localhost:8000/trades/api/post-trades', {
+        const response = await fetch('http://localhost:8000/api/post-trades/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                company: 'Apple',
+                company: 'Xiaomi',
                 current_price: Math.random() * 100,
                 amount: Math.floor(Math.random() * 50),
                 action: action,
