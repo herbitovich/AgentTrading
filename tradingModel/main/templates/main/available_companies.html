@@ -1,19 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Список компаний</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 </head>
 <body>
-    <h2>Доступные компании</h2>
-    <ul>
-        {% for company in companies %}
-            <li>
-                <a href="{% url 'trades-stats' company %}">{{ company }}</a>
-            </li>
-        {% empty %}
-            <li>Нет данных о трейдах.</li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Трейдинг cтатистика</h1>
+    </header>
+        <h2>Доступные компании</h2>
+        <ul>
+            {% for company in companies %}
+                <li>
+                    <a href="{% url 'trades-stats' company %}">{{ company }}</a>
+                </li>
+            {% empty %}
+                <li class="empty">Нет данных о трейдах</li>
+            {% endfor %}
+        </ul>
 </body>
 </html>
