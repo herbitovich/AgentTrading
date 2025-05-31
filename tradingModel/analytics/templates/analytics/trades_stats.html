@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trade Stats: {{ company }} </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'analytics/css/analytics.css' %}">
+</head>
+<body>
+    <header>Статистика для {{ company }}</header>
+
+<div class="container">
+    <div class="chart-box">
+        <h3> Цена акций</h3>
+        <canvas id="price_chart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3> Баланс </h3>
+        <canvas id="balance_chart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3> Действия: Buy/Sell/Hold</h3>
+        <canvas id="action_chart"></canvas>
+    </div>
+</div>
+
+<script>
+    const company = "{{ company }}";
+    const REFRESH_INTERVAL= 500;
+
+    price_chart = new Chart(document.getElementById("price_chart"), {
+       type: "line",
+       data: {
+           labels: [],
+           datasets: [{
+               label: "Цена",
+               data: [],
+               borderColor: "#521e7d",
+               fill: false,
+               tension:0.3
+           }]
+       },
+       options: {
+          scales: {
+            y: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                display: true
+              }
+            }
+          }
+        }
+
+    });
+
+    balance_chart = new Chart(document.getElementById("balance_chart"), {
+       type: "line",
+       data: {
+           labels: [],
+           datasets: [{
+               label: "Баланс",
+               data: [],
+               borderColor: "#521e7d",
+               fill: false,
+               tension:0.3
+           }]
+       },
+       options: {
+          scales: {
+            y: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                display: true
+              }
+            }
+          }
+        }
+    });
+
+    action_chart = new Chart(document.getElementById("action_chart"), {
+       type: "bar",
+       data: {
+           labels: ["Buy", "Sell", "Hold"],
+           datasets: [{
+               label: "Количество действий",
+               data: [0, 0, 0],
+               backgroundColor: ["#521e7d", "#521e7d", "#521e7d"],
+               fill: false,
+               tension:0.3
+           }]
+       },
+       options: {
+          scales: {
+            y: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                display: true
+              }
+            }
+          }
+        }
+    });
+    async function fetchData() {
+        response = await fetch(`/api/get-trades/${company}`);
+        if (response.ok) {
+            trades = await response.json();
+
+            dates = trades.map(trade => new Date(trade.date).toLocaleString());
+            prices = trades.map(trade => trade.current_price);
+            balances = trades.map(trade => trade.amount || 0);
+            action_counts = {buy: 0, sell: 0, hold: 0};
+
+            trades.forEach(trade => {
+                action = trade.action;
+                action_counts[action] += 1;
+            });
+
+            price_chart.data.labels = dates;
+            price_chart.data.datasets[0].data = prices;
+            price_chart.update();
+
+            balance_chart.data.labels = dates;
+            balance_chart.data.datasets[0].data = balances;
+            balance_chart.update();
+
+            action_chart.data.datasets[0].data = [
+                action_counts.buy,
+                action_counts.sell,
+                action_counts.hold,
+            ];
+            action_chart.update();
+        }
+        else {
+            alert("Ошибка HTTP: " + response.status);
+        }
+    }
+    fetchData();
+    setInterval(fetchData, REFRESH_INTERVAL);
+</script>
+</body>
+</html>
