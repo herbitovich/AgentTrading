@@ -1,36 +1,110 @@
 body {
-  background: linear-gradient(180deg, #2a0341, #5f0777);
-  color: #e0e0e0;
-  font-family: 'Raleway', sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
+  height: 100vh;
+  background: #000;
+  color: #00ff88;
+  font-family: "Raleway", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+  padding-bottom: 50px;
 }
 
 header {
-  width: 100vw;
-  background: linear-gradient(90deg, #3a005f, #4d006f, #62007e);
-  color: #ffffff;
-  padding: 30px 0;
-  font-size: 30px;
-  font-weight: 700;
+  color: #00ff88;
+  padding: 36px 50px;
+  font-size: 36px;
+  font-weight: 800;
   text-align: center;
-  border-radius: 24px 24px 24px 24px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1.2px;
-  animation: fadeInDown 0.8s ease-out;
+  letter-spacing: 1.5px;
+  margin-top: 30px;
+  animation: fadeInDown 0.8s ease-out, pulseGlow 2.5s ease-in-out infinite;
+  text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+header::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 16px auto 0;
+  background: linear-gradient(90deg, #00ffaa, #00ffcc);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(0, 255, 170, 0.8);
+  animation: glowBar 2s ease-in-out infinite alternate;
 }
 
 h2 {
   text-align: center;
-  font-size: 30px;
-  color: #ffffff;
+  font-size: 28px;
+  color: #00ff88;
   font-weight: 600;
   width: 90%;
   max-width: 900px;
+  text-shadow: 0 0 1px #00ff88, 0 0 2px #00ffaa;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 40px auto;
+  width: 90%;
+  max-width: 900px;
+}
+
+li {
+  margin-bottom: 24px;
+}
+
+a {
+  display: block;
+  background: #0a0a0a;
+  padding: 30px 40px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #00ff88;
+  font-size: 22px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.3),
+    0 0 60px rgba(0, 255, 136, 0.2);
+  transition: all 0.3s ease;
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 1px #00ff88, 0 0 2px #00ffaa;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+a span {
+  position: relative;
+  z-index: 2;
+}
+
+a:hover {
+  background-color: #0f0f0f;
+  border-color: #00ffaa;
+  color: #00ffcc;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.6), 0 0 48px rgba(0, 255, 136, 0.4),
+    0 0 72px rgba(0, 255, 136, 0.3);
+  text-shadow: 0 0 2px #00ffcc, 0 0 4px #00ffaa, 0 0 6px #00ffaa;
+}
+
+.empty {
+  text-align: center;
+  color: #00ffaa;
+  font-style: italic;
+  font-size: 18px;
+  margin-top: 40px;
+  width: 90%;
+  max-width: 900px;
+  box-sizing: border-box;
+  text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  animation: pulseGlow 3s ease-in-out infinite;
 }
 
 @keyframes fadeInDown {
@@ -44,51 +118,25 @@ h2 {
   }
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto 40px auto;
-  width: 90%;
-  max-width: 900px;
+@keyframes glowBar {
+  from {
+    transform: scaleX(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scaleX(1.2);
+    opacity: 1;
+  }
 }
 
-li {
-  margin-bottom: 24px;
-}
-
-a {
-  display: block;
-  background: white;
-  padding: 30px 40px;
-  border-radius: 20px;
-  text-decoration: none;
-  color: #5b21b6;
-  font-size: 22px;
-  font-weight: 600;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(180, 140, 250, 0.3);
-  width: 100%;
-  text-align: center;
-  box-sizing: border-box;
-  margin: 0 auto;
-}
-
-a:hover {
-  background-color: #ede9fe;
-  border-color: #a78bfa;
-  color: #4c1d95;
-  transform: translateY(-3px) scale(1.01);
-}
-
-.empty {
-  text-align: center;
-  color: #d8b4fe;
-  font-style: italic;
-  font-size: 18px;
-  margin-top: 40px;
-  width: 90%;
-  max-width: 900px;
-  box-sizing: border-box;
-  margin: 0 auto;
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  }
+  50% {
+    text-shadow: 0 0 2px #00ffaa, 0 0 4px #00ffaa;
+  }
+  100% {
+    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  }
 }
