@@ -140,8 +140,6 @@
         agentNames.forEach((agent) => {
           agentBalance[agent] = trades.map((trade) => {
             const data = trade.agents.find((a) => a.agent === agent);
-            console.log(123);
-            console.log(data.value);
             return data ? data.value : 0;
           });
         });
