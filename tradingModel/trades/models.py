@@ -12,6 +12,7 @@ class Trade(models.Model):
         choices=TRADE_ACTIONS,
     )
     amount = models.FloatField(null=True, blank=True)
+    value = models.FloatField()
     current_price = models.FloatField()
     company = models.CharField(max_length=256)
     agent = models.CharField(max_length=50)

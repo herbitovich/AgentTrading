@@ -89,6 +89,9 @@
           datasets: [],
         },
         options: {
+          animation: {
+            duration: 0
+          },
           responsive: true,
           scales: {
             y: {
@@ -137,7 +140,7 @@
         agentNames.forEach((agent) => {
           agentBalance[agent] = trades.map((trade) => {
             const data = trade.agents.find((a) => a.agent === agent);
-            return data ? data.amount : 0;
+            return data ? data.value : 0;
           });
         });
 
