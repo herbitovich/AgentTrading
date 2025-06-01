@@ -12,15 +12,14 @@ body {
 
 header {
   color: #00ff88;
-  padding: 36px 50px;
-  font-size: 36px;
+  padding: 30px 50px;
+  font-size: 40px;
   font-weight: 800;
   text-align: center;
   letter-spacing: 1.5px;
   margin-top: 30px;
   animation: fadeInDown 0.8s ease-out, pulseGlow 2.5s ease-in-out infinite;
   text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  animation: pulseGlow 3s ease-in-out infinite;
 }
 
 header::after {
@@ -31,7 +30,7 @@ header::after {
   margin: 16px auto 0;
   background: linear-gradient(90deg, #00ffaa, #00ffcc);
   border-radius: 2px;
-  box-shadow: 0 0 12px rgba(0, 255, 170, 0.8);
+  box-shadow: 0 0 12px rgba(0, 255, 170, 0.5);
   animation: glowBar 2s ease-in-out infinite alternate;
 }
 
@@ -42,7 +41,7 @@ h2 {
   font-weight: 600;
   width: 90%;
   max-width: 900px;
-  text-shadow: 0 0 1px #00ff88, 0 0 2px #00ffaa;
+  text-shadow: 0 0 1px #00ff88;
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
@@ -65,10 +64,11 @@ a {
   border-radius: 16px;
   text-decoration: none;
   color: #00ff88;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 600;
   border: 2px solid transparent;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.3),
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4),
+    0 0 40px rgba(0, 255, 136, 0.3),
     0 0 60px rgba(0, 255, 136, 0.2);
   transition: all 0.3s ease;
   text-align: center;
@@ -79,17 +79,13 @@ a {
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
-a span {
-  position: relative;
-  z-index: 2;
-}
-
 a:hover {
   background-color: #0f0f0f;
   border-color: #00ffaa;
   color: #00ffcc;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 0 24px rgba(0, 255, 136, 0.6), 0 0 48px rgba(0, 255, 136, 0.4),
+  transform: translateY(-3px);
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.6),
+    0 0 48px rgba(0, 255, 136, 0.4),
     0 0 72px rgba(0, 255, 136, 0.3);
   text-shadow: 0 0 2px #00ffcc, 0 0 4px #00ffaa, 0 0 6px #00ffaa;
 }
@@ -98,7 +94,7 @@ a:hover {
   text-align: center;
   color: #00ffaa;
   font-style: italic;
-  font-size: 18px;
+  font-size: 20px;
   margin-top: 40px;
   width: 90%;
   max-width: 900px;
