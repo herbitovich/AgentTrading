@@ -1,11 +1,13 @@
 from collections import defaultdict
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .models import Trade
 from .serializers import TradeSerializer
 
 @api_view(['POST'])
+@csrf_exempt
 def post_trades(request):
     data = request.data
     company = data['company']
@@ -21,7 +23,8 @@ def post_trades(request):
             'date': date,
             'agent': agent_data.get('agent'),
             'action': agent_data.get('action'),
-            'amount': agent_data.get('amount')
+            'amount': agent_data.get('amount'),
+            'value': agent_data.get('value')
         }
         serializer = TradeSerializer(data=trade_data)
         if serializer.is_valid():
@@ -36,7 +39,7 @@ def post_trades(request):
 @api_view(['GET'])
 def get_trades(request, company):
     n = int(request.GET.get('n', 90))
-    trades = Trade.objects.filter(company__iexact=company).order_by('-date')[:n]
+    trades = reversed(Trade.objects.filter(company__iexact=company).order_by('-date')[:n])
     if not trades:
         return Response({"message": f"No trades were found for the company {company}"}, status=status.HTTP_404_NOT_FOUND)
     group = defaultdict(lambda: {"company" : company, "agents" : []})
@@ -48,7 +51,8 @@ def get_trades(request, company):
         group[key]["agents"].append({
             "agent": trade.agent,
             "action": trade.action,
-            "amount": trade.amount
+            "amount": trade.amount,
+            "value": trade.value
         })
     response_data = list(group.values())
     return Response(response_data, status=status.HTTP_200_OK)
