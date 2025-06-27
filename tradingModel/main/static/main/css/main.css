@@ -10,6 +10,29 @@ body {
   padding-bottom: 50px;
 }
 
+.company-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.company-section table th,
+.company-section table td {
+    border: 1px solid #00ff88;
+    padding: 10px;
+    text-align: center;
+    color: #00ff88;
+    background-color: rgba(0, 255, 136, 0.05);
+}
+
+.company-section h3 {
+    color: #00ffaa;
+    font-size: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    text-shadow: 0 0 2px #00ffaa;
+}
+
 header {
   color: #00ff88;
   padding: 30px 50px;
@@ -56,11 +79,44 @@ ul {
 li {
   margin-bottom: 24px;
 }
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowBar {
+  from {
+    transform: scaleX(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scaleX(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  }
+  50% {
+    text-shadow: 0 0 2px #00ffaa, 0 0 4px #00ffaa;
+  }
+  100% {
+    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
+  }
+}
 
 a {
   display: block;
   background: #0a0a0a;
-  padding: 30px 40px;
+  padding: 20px 30px;
   border-radius: 16px;
   text-decoration: none;
   color: #00ff88;

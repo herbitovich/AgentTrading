@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'trade_db',
-        'USER' : 'herb',
+        'USER' : 'fantomchik_30',
         'PASSWORD' : 'kondaurova',
         'HOST' : 'localhost',
         'PORT' : '5432',
@@ -129,5 +129,5 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 30000
 

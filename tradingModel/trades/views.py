@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .models import Trade
 from .serializers import TradeSerializer
+from .utils import company_stats
 
 @api_view(['POST'])
 @csrf_exempt
@@ -38,12 +39,13 @@ def post_trades(request):
 
 @api_view(['GET'])
 def get_trades(request, company):
-    n = int(request.GET.get('n', 90))
-    trades = reversed(Trade.objects.filter(company__iexact=company).order_by('-date')[:n])
+    n = int(request.GET.get('n', 60))
+    trades = Trade.objects.filter(company__iexact=company).order_by('-date')[:n]
     if not trades:
         return Response({"message": f"No trades were found for the company {company}"}, status=status.HTTP_404_NOT_FOUND)
+    trades_list = list(reversed(trades))
     group = defaultdict(lambda: {"company" : company, "agents" : []})
-    for trade in trades:
+    for trade in trades_list:
         key = trade.date.isoformat()
         if "date" not in group[key]:
             group[key]["date"] = trade.date.isoformat()
@@ -54,8 +56,12 @@ def get_trades(request, company):
             "amount": trade.amount,
             "value": trade.value
         })
+    stats = company_stats(trades_list)
     response_data = list(group.values())
-    return Response(response_data, status=status.HTTP_200_OK)
+    return Response({
+        "trades": response_data,
+        "stats": stats
+    }, status=status.HTTP_200_OK)
 
 
 

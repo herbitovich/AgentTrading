@@ -12,17 +12,45 @@
 </head>
 <body>
     <header>
-        <h1>Трейдинг cтатистика</h1>
+        <h1>Трейдинг статистика</h1>
     </header>
-        <h2>Доступные компании</h2>
-        <ul>
-            {% for company in companies %}
-                <li>
-                    <a href="{% url 'trades-stats' company %}">{{ company }}</a>
-                </li>
-            {% empty %}
-                <li class="empty">Нет данных о трейдах</li>
-            {% endfor %}
-        </ul>
+
+    <h2>Доступные компании</h2>
+
+    {% for company in companies %}
+        <section class="company-section">
+            <h3>{{ company.company }}</h3>
+
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Агент</th>
+                        <th>Средний дневной профит</th>
+                        <th>Средний месячный профит</th>
+                        <th>Средний годовой профит</th>
+                        <th>Sharpe Ratio</th>
+                        <th>Суммарный профит</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agent in company.agents %}
+                        <tr>
+                            <td>{{ agent.agent }}</td>
+                            <td>{{ agent.avg_daily_profit }}</td>
+                            <td>{{ agent.avg_monthly_profit }}</td>
+                            <td>{{ agent.avg_yearly_profit }}</td>
+                            <td>{{ agent.sharpe_ratio }}</td>
+                            <td>{{ agent.total_profit }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>
+                <a href="{% url 'trades-stats' company.company %}">Подробная статистика</a>
+            </p>
+        </section>
+    {% empty %}
+        <p>Нет данных о трейдах</p>
+    {% endfor %}
 </body>
 </html>

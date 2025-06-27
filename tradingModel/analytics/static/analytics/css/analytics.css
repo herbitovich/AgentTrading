@@ -11,6 +11,30 @@ body {
   padding-bottom: 50px;
 }
 
+#agent-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+#agent-stats h3 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.agent-stats {
+  flex: 1 1 300px;
+  max-width: 400px;
+  background-color: rgba(0, 255, 136, 0.05);
+  border: 1px solid #00ff88;
+  border-radius: 10px;
+  padding: 15px;
+  font-family: 'Raleway', sans-serif;
+  color: #00ff88;
+}
+
 header {
   color: #00ff88;
   padding: 30px 50px;
@@ -112,6 +136,7 @@ header {
   color: #00ff88;
   text-align: center;
 }
+
 
 .chart-box:hover {
   transform: translateY(-5px);
