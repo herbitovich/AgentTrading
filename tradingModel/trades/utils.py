@@ -55,8 +55,7 @@ def company_stats(trades):
     agents = df["agent"].unique()
     for agent in agents:
         df_agent = df[df["agent"] == agent]
-        avg_daily_profit = df_agent["value"].mean()-10000
-        avg_daily_profit = float(avg_daily_profit)
+        avg_daily_profit = (df_agent["value"]-df_agent["value"].shift(1)).mean()
         avg_monthly_profit = avg_daily_profit * 21
         avg_yearly_profit = avg_daily_profit * 250
 
@@ -65,9 +64,10 @@ def company_stats(trades):
         avg_monthly_profit_per = avg_daily_profit_per * 21
         avg_yearly_profit_per = avg_daily_profit_per * 250
 
-        sharpe_ratio = 0
-        if avg_daily_profit_per > 0:
-            sharpe_ratio = ((avg_daily_profit_per - 0.03 / 250) / df_agent["value"].std()) * math.sqrt(250)
+        df_agent["daily_return"] = df_agent["value"].pct_change()
+        rf_daily = 0.03 / 250
+        excess_returns = df_agent["daily_return"] - rf_daily
+        sharpe_ratio = (excess_returns.mean() / excess_returns.std()) * math.sqrt(250)
 
         avg_sell_profit = calc_avg_sell_profit(df_agent)
         price_growth = 0.0
@@ -86,14 +86,14 @@ def company_stats(trades):
                 return 0.0
 
         results[agent] = {
-            "avg_daily_profit": safe_round(avg_daily_profit * 100, 2),
-            "avg_monthly_profit": safe_round(avg_monthly_profit * 100, 2),
-            "avg_yearly_profit": safe_round(avg_yearly_profit * 100, 2),
-            "avg_daily_profit_per": safe_round(avg_daily_profit_per, 3),
-            "avg_monthly_profit_per": safe_round(avg_monthly_profit_per, 3),
-            "avg_yearly_profit_per": safe_round(avg_yearly_profit_per, 3),
-            "sharpe_ratio": safe_round(sharpe_ratio, 15),
-            "avg_sell_profit": safe_round(avg_sell_profit, 2),
+            "avg_daily_profit": safe_round(avg_daily_profit, 1),
+            "avg_monthly_profit": safe_round(avg_monthly_profit, 1),
+            "avg_yearly_profit": safe_round(avg_yearly_profit, 1),
+            "avg_daily_profit_per": safe_round(avg_daily_profit_per, 2),
+            "avg_monthly_profit_per": safe_round(avg_monthly_profit_per, 2),
+            "avg_yearly_profit_per": safe_round(avg_yearly_profit_per, 2),
+            "sharpe_ratio": safe_round(sharpe_ratio, 20),
+            "avg_sell_profit": safe_round(avg_sell_profit, 1),
             "price_growth": safe_round(price_growth, 2),
             "last_value": safe_round(df_agent["value"].iloc[-1]),
         }

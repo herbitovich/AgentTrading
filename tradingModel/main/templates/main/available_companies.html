@@ -9,46 +9,128 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'main/img/favicon.png' %}">  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.1.0/chroma.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>Трейдинг статистика</h1>
+        <h1 id="page-heading">Trades Statistics</h1>
     </header>
+    <h2 class="main-heading" id="heading-pad">Общая статистика</h2>
+    <section class="all-section">
+      <div class="chart-container">
+        <div>
+          <h3>Средняя дневная прибыль</h3>
+          <canvas id="daily_profit_chart"></canvas>
+        </div>
+        <div>
+          <h3>Суммарная прибыль</h3>
+          <canvas id="total_profit_chart"></canvas>
+        </div>
+      </div>
+    </section>
+    <script>
+      const all_data = {{ all_agents|safe }};
+      const palette = chroma.brewer.Set2;
+      const agentColors = {};
 
-    <h2>Доступные компании</h2>
+      function getColorForAgent(agent) {
+        if (!agentColors[agent]) {
+          const idx = Object.keys(agentColors).length % palette.length;
+          agentColors[agent] = palette[idx];
+        }
+        return agentColors[agent];
+      }
+      const agents = all_data;
+      const labels = agents.map(a => a.agent);
+      const daily_data = agents.map(a => a.avg_daily_profit);
+      const total_data = agents.map(a => a.total_profit);
+      const colors = labels.map((_, i) => palette[i % palette.length]);
+        new Chart(document.getElementById(`daily_profit_chart`), {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Средняя дневная прибыль`,
+              data: daily_data,
+              backgroundColor: colors
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  color: "#e5e5e5"
+                }
+              },
+              x: {
+                ticks: {
+                  color: "#e5e5e5"
+                },
+                grid: {
+                  display: false
+                },
+              }
+            }
+          }
+        });
 
+        new Chart(document.getElementById(`total_profit_chart`), {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Суммарная прибыль`,
+              data: total_data,
+              backgroundColor: colors,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  color: "#e5e5e5"
+                }
+              },
+              x: {
+                ticks: {
+                  color: "#e5e5e5"
+                },
+                grid: {
+                    display: false
+                }
+              }
+            }
+          }
+        });
+    </script>
+    <h2 class="main-heading">Доступные компании</h2>
+    <div id="companies">
     {% for company in companies %}
-        <section class="company-section">
+        <div class="company-section">
             <h3>{{ company.company }}</h3>
 
-            <table border="1" cellpadding="8" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Агент</th>
-                        <th>Средний дневной профит</th>
-                        <th>Средний месячный профит</th>
-                        <th>Средний годовой профит</th>
-                        <th>Sharpe Ratio</th>
-                        <th>Суммарный профит</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agent in company.agents %}
-                        <tr>
-                            <td>{{ agent.agent }}</td>
-                            <td>{{ agent.avg_daily_profit }}</td>
-                            <td>{{ agent.avg_monthly_profit }}</td>
-                            <td>{{ agent.avg_yearly_profit }}</td>
-                            <td>{{ agent.sharpe_ratio }}</td>
-                            <td>{{ agent.total_profit }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="info-container">
+            {% for agent in company.agents %}
+                <p class="info">Средний дневной профит <strong>{{agent.agent.upper}}</strong>: {{ agent.avg_daily_profit }}</p>
+                <p class="info">Суммарный профит <strong>{{agent.agent.upper}}</strong>: {{ agent.total_profit }}</p>
+            {% endfor %}
+            </div>
             <p>
-                <a href="{% url 'trades-stats' company.company %}">Подробная статистика</a>
+                <a class="btn-link" href="{% url 'trades-stats' company.company %}">Подробная статистика</a>
             </p>
-        </section>
+        </div>
     {% empty %}
         <p>Нет данных о трейдах</p>
     {% endfor %}

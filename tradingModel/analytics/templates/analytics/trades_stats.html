@@ -14,34 +14,36 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{% static 'analytics/css/analytics.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'analytics/img/favicon.png' %}">  
   </head>
   <body>
-    <header>{{ company }}</header>
+    <header>
+      <a href="/" class="hamburger" id="hamburger">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </a>
+      <h1 id="page-heading">{{ company }}</h1>
+    </header>
     <div class="container">
       <div class="chart-box">
-        <div class="glow-effect"></div>
-        <div class="noise-overlay"></div>
         <h3>Цена акций</h3>
         <canvas id="price_chart"></canvas>
       </div>
 
       <div class="chart-box">
-        <div class="glow-effect"></div>
-        <div class="noise-overlay"></div>
         <h3>Баланс</h3>
         <canvas id="balance_chart"></canvas>
       </div>
 
       <div class="chart-box" id="agent-stats">
-        <div class="glow-effect"></div>
-        <div class="noise-overlay"></div>
         <h3>Аналитика по агентам</h3>
       </div>
     </div>
 
     <script>
       const company = "{{ company }}";
-      const REFRESH_INTERVAL = 500;
+      const REFRESH_INTERVAL = 5000;
       const action_charts = {};
       const palette = chroma.brewer.Set2;
       const agentColors = {};
@@ -63,7 +65,8 @@
               label: "Цена",
               data: [],
               borderColor: "#00ff88",
-              fill: false,
+              backgroundColor: "#276337",
+              fill: true,
               tension: 0.3,
             },
           ],
@@ -76,13 +79,21 @@
                 display: false,
               },
               ticks: {
-                color: "#00ff88",
+                color: "#e5e5e5",
               },
             },
             x: {
               ticks: {
-                color: "#00ff88",
+                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                callback: function(val, index) {
+                  // Hide every 2nd tick label
+                  return index % 2 === 0 ? this.getLabelForValue(val) : '';
+                },
+                color: '#e5e5e5',
               },
+              grid: {
+                display: false,
+              }
             },
           },
         },
@@ -106,13 +117,21 @@
                 display: false,
               },
               ticks: {
-                color: "#00ff88",
+                color: "#e5e5e5",
               },
             },
             x: {
               ticks: {
-                color: "#00ff88",
+                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                callback: function(val, index) {
+                  // Hide every 2nd tick label
+                  return index % 2 === 0 ? this.getLabelForValue(val) : '';
+                },
+                color: '#e5e5e5',
               },
+              grid: {
+                display: false,
+              }
             },
           },
         },
@@ -157,7 +176,7 @@
           label: `Баланс ${agent}`,
           data: agentBalance[agent],
           borderColor: getColorForAgent(agent),
-          fill: false,
+          fill: true,
           tension: 0.3,
         }));
 
@@ -184,8 +203,6 @@
             const div = document.createElement("div");
             div.className = "chart-box";
             div.innerHTML = `
-              <div class="glow-effect"></div>
-              <div class="noise-overlay"></div>
               <h3>Действия: ${agent}</h3>
               <canvas id="action_chart_${agent}"></canvas>
             `;
@@ -215,13 +232,16 @@
                         display: false,
                       },
                       ticks: {
-                        color: "#00ff88",
+                        color: "#e5e5e5",
                       },
                     },
                     x: {
                       ticks: {
-                        color: "#00ff88",
+                        color: "#e5e5e5",
                       },
+                      grid: {
+                        display: false
+                      }
                     },
                   },
                 },
@@ -245,17 +265,13 @@
           div.className = "agent-stats";
           div.innerHTML = `
             <h4>${agent}</h4>
-            <ul>
-              <li>Средний дневной профит %: ${metrics.avg_daily_profit_per}%</li>
-              <li>Средний месячный профит %: ${metrics.avg_monthly_profit_per}%</li>
-              <li>Среднегодовой профит %: ${metrics.avg_yearly_profit_per}%</li>
-              <li>Средний дневной профит: ${metrics.avg_daily_profit}</li>
-              <li>Средний месячный профит: ${metrics.avg_monthly_profit}</li>
-              <li>Среднегодовой профит: ${metrics.avg_yearly_profit}</li>
-              <li>Sharpe Ratio: ${metrics.sharpe_ratio}</li>
-              <li>Средняя прибыль на продажу: ${metrics.avg_sell_profit}</li>
-              <li>Рост цены акций: ${metrics.price_growth}%</li>
-            </ul>`;
+            <div class="agent-stat">
+              <li><p>Средний дневной профит %: </p><p>${metrics.avg_daily_profit_per}%</p></li>
+              <li><p>Средний дневной профит: </p><p>${metrics.avg_daily_profit}</p></li>
+              <li><p>Sharpe Ratio: </p><p>${metrics.sharpe_ratio}</p></li>
+              <li><p>Средняя прибыль на продажу: </p><p>${metrics.avg_sell_profit}</p></li>
+              <li><p>Рост цены акций: </p><p>${metrics.price_growth}%</p></li>
+            </div>`;
           analyticsContainer.appendChild(div);
         }
       }

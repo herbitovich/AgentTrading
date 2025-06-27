@@ -85,7 +85,7 @@ def trade(df, agent_name, company, trend_predictor, model=None):
         send_transaction(
             company=company,
             current_price=float(current_price),
-            date=str(date),
+            date=date,
             agent_actions=agent_data
         )
         
