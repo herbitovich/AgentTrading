@@ -1,57 +1,51 @@
-from custom_env import StockTradingEnv
-import pandas as pd
+import register_env
 import torch
 import torch.nn as nn
+from sklearn.model_selection import train_test_split
+from stable_baselines3.common.evaluation import evaluate_policy
+import gymnasium
+from stable_baselines3.common.monitor import Monitor
 
 class TrendPredictor(nn.Module):
-    def __init__(self, window_size, hidden_size):
+    def __init__(self, num_features, hidden_size):
         super(TrendPredictor, self).__init__()
-        self.window_size = window_size
-        self.hidden_size = hidden_size
-        self.LSTM = nn.LSTM(self.window_size, self.hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, 1)
         self.do = nn.Dropout(0.1)
-        self.fc = nn.Linear(self.hidden_size, 1)
+        self.LSTM = nn.LSTM(num_features, hidden_size, batch_first=True)
+
     def forward(self, x):
-        x, _ = self.LSTM(x)
-        x = self.do(x)
-        x = self.fc(x)
-        return x
+        out, _ = self.LSTM(x)  # out: (batch, seq_len, hidden_size)
+        out = self.do(out)
+        return nn.functional.sigmoid(self.fc(out[:, -1, :]))  # только последний таймстеп интересует
 
-WINDOW_SIZE = 256
-HIDDEN_SIZE = 512
+WINDOW_SIZE = 30
+HIDDEN_SIZE = 64
 
-trend_predictor = TrendPredictor(WINDOW_SIZE, HIDDEN_SIZE)
-trend_predictor.load_state_dict(torch.load("LSTM_Trader.pt"))
+trend_predictor = TrendPredictor(num_features=12, hidden_size=HIDDEN_SIZE)
+trend_predictor.load_state_dict(torch.load("new_predictor_best.pt"))
+
 from stable_baselines3 import SAC
-from sklearn.model_selection import train_test_split
+from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
 import os
 
-train, test = train_test_split(os.listdir('dataset/stocks'), test_size=0.01)
+checkpoint = CheckpointCallback(save_freq=50000, save_path='./logs/')
 
-model = SAC("MlpPolicy", env=StockTradingEnv(pd.read_csv(os.path.join('dataset/stocks', train[0]))["Close"], trend_predictor, 5), verbose=1, device='cuda')
-for ds in train:
-    print(f"Started training on {ds}") 
-    ds_path = os.path.join('dataset/stocks', ds)
-    df = pd.read_csv(ds_path)["Close"]
-    if len(df)<=WINDOW_SIZE:
-        print("Dataset is too short.")
-        continue
-    env = StockTradingEnv(df, trend_predictor, 5)
-    model.set_env(env)
-    model.learn(total_timesteps=2048)
-    print("Finished training")
-for test_ds in test:
-    print(f"Evaluating on {test_ds}")
-    df = pd.read_csv(os.path.join('dataset/stocks', test_ds))["Close"]
-    if len(df)<=WINDOW_SIZE:
-        print("Dataset is too short.")
-        continue
-    env = StockTradingEnv(df, trend_predictor, 5)
-    obs = env.reset()
-    while True:
-        action, _states = model.predict(obs)
-        obs, rewards, done, info = env.step(action)
-        if done:
-            break
-    env.render()
+train = [os.path.join('trader-agent', 'train', file) for file in os.listdir('trader-agent/train')]
+test, eval = train_test_split([os.path.join('trader-agent', 'test', file) for file in os.listdir('trader-agent/test')], test_size=0.2, random_state=97)
+
+
+train_env = gymnasium.make("gymnasium_env/Trading-v1", dfs=train, trend_predictor=trend_predictor, render_mode='human')
+eval_env = Monitor(gymnasium.make("gymnasium_env/Trading-v1", dfs=eval, trend_predictor=trend_predictor, render_mode='human'))
+test_env = Monitor(gymnasium.make("gymnasium_env/Trading-v1", dfs=test, trend_predictor=trend_predictor, render_mode='human'))
+
+
+eval_callback = EvalCallback(eval_env, best_model_save_path="./logs/",
+                             log_path="./logs/", eval_freq=5000,
+                             deterministic=False, render=False)
+
+
+model = SAC("MlpPolicy", env=train_env, verbose=1, device='cpu')
+model.learn(total_timesteps=1_000_000, callback=[checkpoint, eval_callback], progress_bar=True)
 model.save("agent-trader")
+mean_reward, std_reward = evaluate_policy(model, test_env, n_eval_episodes=len(test), deterministic=True, render=False)
+print(f"Mean reward: {mean_reward:.2f} +/- {std_reward:.2f}")
