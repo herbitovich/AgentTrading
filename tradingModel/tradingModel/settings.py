@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'trade_db',
-        'USER' : 'fantomchik_30',
+        'USER' : 'herb',
         'PASSWORD' : 'kondaurova',
         'HOST' : 'localhost',
         'PORT' : '5432',

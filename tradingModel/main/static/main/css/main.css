@@ -1,71 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
 body {
-  height: 100vh;
-  background: #000;
-  color: #00ff88;
-  font-family: "Raleway", sans-serif;
+  background: #111526;
+  /*color: #00ff88;*/
+  font-family: "Nunito Sans", sans-serif;
+  padding-bottom: 50px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Add/Modify these CSS rules */
+#companies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.company-section {
+  color: #a0a0a0;
+  flex: 1 1 600px;
+  max-width: 400px;
+  min-width: 300px;
+  height: fit-content;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow-x: hidden;
-  padding-bottom: 50px;
+  padding: 15px;
+  box-sizing: border-box;
+  background: #171c31;
+  border-radius: 16px;
 }
 
-.company-section table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+.info-container {
+  flex: 1;
+  overflow: auto;
 }
 
-.company-section table th,
-.company-section table td {
-    border: 1px solid #00ff88;
-    padding: 10px;
-    text-align: center;
-    color: #00ff88;
-    background-color: rgba(0, 255, 136, 0.05);
+.company-section p:last-child {
+  margin-top: auto;
+  padding-top: 10px;
 }
 
 .company-section h3 {
-    color: #00ffaa;
-    font-size: 40px;
-    margin-bottom: 10px;
-    text-align: center;
-    text-shadow: 0 0 2px #00ffaa;
+  margin-top: 5px;
+  color: #f5f5f5;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 2.5em;
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: 1000;
 }
 
 header {
-  color: #00ff88;
-  padding: 30px 50px;
-  font-size: 40px;
-  font-weight: 800;
-  text-align: center;
+  background-color: #171c31;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: fit-content;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#page-heading {
+  font-family: "Nunito Sans", sans-serif;
+  color: #e5e5e5;
+  font-size: 2em;
+  font-weight: 200;
+  flex-grow: 1;
+  text-align: left;
+  padding-left: 30px;
   letter-spacing: 1.5px;
-  margin-top: 30px;
-  animation: fadeInDown 0.8s ease-out, pulseGlow 2.5s ease-in-out infinite;
-  text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
 }
 
-header::after {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 4px;
-  margin: 16px auto 0;
-  background: linear-gradient(90deg, #00ffaa, #00ffcc);
-  border-radius: 2px;
-  box-shadow: 0 0 12px rgba(0, 255, 170, 0.5);
-  animation: glowBar 2s ease-in-out infinite alternate;
+.main-heading {
+  text-align: left;
+  margin-top: 5vh;
+  padding-left: 30px;
+  font-size: 3.2em;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 1000;
 }
 
-h2 {
-  text-align: center;
-  font-size: 28px;
-  color: #00ff88;
-  font-weight: 600;
-  width: 90%;
-  max-width: 900px;
-  text-shadow: 0 0 1px #00ff88;
-  animation: pulseGlow 3s ease-in-out infinite;
+#heading-pad {
+  margin-top: 10%;
 }
 
 ul {
@@ -79,116 +102,80 @@ ul {
 li {
   margin-bottom: 24px;
 }
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes glowBar {
-  from {
-    transform: scaleX(1);
-    opacity: 0.6;
-  }
-  to {
-    transform: scaleX(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes pulseGlow {
-  0% {
-    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  }
-  50% {
-    text-shadow: 0 0 2px #00ffaa, 0 0 4px #00ffaa;
-  }
-  100% {
-    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  }
-}
-
-a {
+.btn-link {
   display: block;
-  background: #0a0a0a;
-  padding: 20px 30px;
-  border-radius: 16px;
-  text-decoration: none;
-  color: #00ff88;
-  font-size: 25px;
-  font-weight: 600;
-  border: 2px solid transparent;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4),
-    0 0 40px rgba(0, 255, 136, 0.3),
-    0 0 60px rgba(0, 255, 136, 0.2);
-  transition: all 0.3s ease;
   text-align: center;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  text-shadow: 0 0 1px #00ff88, 0 0 2px #00ffaa;
-  animation: pulseGlow 3s ease-in-out infinite;
+  padding: 15px 5px;
+  border-radius: 25px;
+  text-decoration: none;
+  color: #e5e5e5;
+  background: #111526;
+  font-size: 1.2em;
+  font-weight: 300;
+  border: 1px solid rgb(62, 62, 62);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-a:hover {
-  background-color: #0f0f0f;
-  border-color: #00ffaa;
-  color: #00ffcc;
-  transform: translateY(-3px);
-  box-shadow: 0 0 24px rgba(0, 255, 136, 0.6),
-    0 0 48px rgba(0, 255, 136, 0.4),
-    0 0 72px rgba(0, 255, 136, 0.3);
-  text-shadow: 0 0 2px #00ffcc, 0 0 4px #00ffaa, 0 0 6px #00ffaa;
+.btn-link:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.chart-container {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.chart-container div {
+  position: relative;
+  background: #171c31;
+  padding: 30px;
+  border-radius: 16px;
+}
+
+canvas {
+  position: relative;
+  max-height: 250px;
+  width: 100%;
+}
+
+.chart-container h3 {
+  margin-top: 0;
+  font-family: "Nunito Sans";
+  position: relative;
+  margin-bottom: 20px;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+
+
+.all-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .empty {
   text-align: center;
-  color: #00ffaa;
+  color: #f5f5f5;
   font-style: italic;
   font-size: 20px;
   margin-top: 40px;
   width: 90%;
   max-width: 900px;
   box-sizing: border-box;
-  text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  animation: pulseGlow 3s ease-in-out infinite;
 }
 
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes glowBar {
-  from {
-    transform: scaleX(1);
-    opacity: 0.6;
-  }
-  to {
-    transform: scaleX(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes pulseGlow {
-  0% {
-    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  }
-  50% {
-    text-shadow: 0 0 2px #00ffaa, 0 0 4px #00ffaa;
-  }
-  100% {
-    text-shadow: 0 0 1px #00ffaa, 0 0 2px #00ffaa;
-  }
+#companies>p {
+  color: white;
 }

@@ -42,7 +42,6 @@ def available_companies(request):
             "avg_daily_profit": sum(avg_daily_profit_list) / len(avg_daily_profit_list),
             "total_profit": sum(total_profit_list)
         })
-    print("huy")
     print(all_agents_data)
     return render(request, 'main/available_companies.html', {
         "companies": companies_data,
