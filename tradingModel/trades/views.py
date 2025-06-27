@@ -44,6 +44,7 @@ def get_trades(request, company):
     if not trades:
         return Response({"message": f"No trades were found for the company {company}"}, status=status.HTTP_404_NOT_FOUND)
     trades_list = list(reversed(trades))
+    trades_full = Trade.objects.filter(company__iexact=company).order_by('date')
     group = defaultdict(lambda: {"company" : company, "agents" : []})
     for trade in trades_list:
         key = trade.date.isoformat()
@@ -56,7 +57,7 @@ def get_trades(request, company):
             "amount": trade.amount,
             "value": trade.value
         })
-    stats = company_stats(trades_list)
+    stats = company_stats(trades_full)
     response_data = list(group.values())
     return Response({
         "trades": response_data,

@@ -1,5 +1,42 @@
 import pandas as pd
 import math
+
+def calc_avg_sell_profit(df_agent):
+    df_agent = df_agent.sort_values("date").reset_index(drop=True)
+    buy_stack = []
+    sell_profits = []
+    for el, row in df_agent.iterrows():
+        action = row["action"]
+        amount = row["amount"]
+        price = row["price"]
+
+        if action == "buy":
+            buy_stack.append([amount, price])
+        elif action == "sell":
+            sell_amount = amount
+            profit = 0.0
+
+            while sell_amount > 0 and buy_stack:
+                buy_amount, buy_price = buy_stack[0]
+                used_amount = min(sell_amount, buy_amount)
+
+                profit += (price - buy_price) * used_amount
+
+                buy_amount -= used_amount
+                sell_amount -= used_amount
+
+                if buy_amount == 0:
+                    buy_stack.pop(0)
+                else:
+                    buy_stack[0][0] = buy_amount
+
+            sell_profits.append(profit)
+
+    if sell_profits:
+        return sum(sell_profits) / len(sell_profits)
+    else:
+        return 0.0
+
 def company_stats(trades):
     if not trades:
         return {}
@@ -18,27 +55,21 @@ def company_stats(trades):
     agents = df["agent"].unique()
     for agent in agents:
         df_agent = df[df["agent"] == agent]
-        daily_values = df_agent.groupby("date")["value"].mean()
-
-        daily_profit = df_agent["value"].diff().dropna()
-        avg_daily_profit = daily_profit.mean()
+        avg_daily_profit = df_agent["value"].mean()-10000
+        avg_daily_profit = float(avg_daily_profit)
         avg_monthly_profit = avg_daily_profit * 21
         avg_yearly_profit = avg_daily_profit * 250
 
-        daily_profit_per = daily_values.pct_change().dropna()
-        avg_daily_profit_per = daily_profit_per.mean()
+        avg_daily_profit_per = avg_daily_profit/100
+        avg_daily_profit_per = float(avg_daily_profit_per)
         avg_monthly_profit_per = avg_daily_profit_per * 21
         avg_yearly_profit_per = avg_daily_profit_per * 250
+
         sharpe_ratio = 0
-        if len(daily_profit_per) > 0:
-            sharpe_ratio = (daily_profit_per.mean() - 0.03) / daily_profit_per.std()
+        if avg_daily_profit_per > 0:
+            sharpe_ratio = ((avg_daily_profit_per - 0.03 / 250) / df_agent["value"].std()) * math.sqrt(250)
 
-        sells = df_agent[df_agent["action"] == "sell"]
-
-        avg_sell_profit = 0
-        if not sells.empty:
-           avg_sell_profit = sells["value"].diff().mean()
-
+        avg_sell_profit = calc_avg_sell_profit(df_agent)
         price_growth = 0.0
         if not df_agent.empty:
             try:
